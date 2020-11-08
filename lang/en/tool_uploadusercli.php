@@ -82,7 +82,6 @@ $string['uploadusers_help'] = 'Users may be uploaded (and optionally enrolled in
 $string['uploadusers_link'] = 'admin/tool/uploadusercli/index';
 $string['uploaduserspreview'] = 'Upload users preview';
 $string['uploadusersresult'] = 'Upload users results';
-$string['uploadusercli:uploaduserpictures'] = 'Upload user pictures';
 $string['useraccountupdated'] = 'User updated';
 $string['useraccountuptodate'] = 'User up-to-date';
 $string['userdeleted'] = 'User deleted';
