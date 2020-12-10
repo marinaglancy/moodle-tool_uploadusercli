@@ -35,7 +35,7 @@ global $CFG;
  * @copyright  2019 Jun Pataleta
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class field_value_validators_testcase extends advanced_testcase {
+class tool_uploadusercli_field_value_validators_testcase extends advanced_testcase {
 
     /**
      * Data provider for \field_value_validators_testcase::test_validate_theme().

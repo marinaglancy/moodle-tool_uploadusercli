@@ -54,7 +54,7 @@ define('UU_PWRESET_ALL', 2);
  * @copyright  2007 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class uu_progress_tracker {
+class tool_uploadusercli_uu_progress_tracker {
     /** @var array */
     protected $_row;
 
@@ -67,7 +67,7 @@ class uu_progress_tracker {
     protected $headers = [];
 
     /**
-     * uu_progress_tracker constructor.
+     * tool_uploadusercli_uu_progress_tracker constructor.
      */
     public function __construct() {
         $this->headers = [
@@ -186,7 +186,7 @@ class uu_progress_tracker {
  * @param moodle_url $returnurl return url in case of any error
  * @return array list of fields
  */
-function uu_validate_user_upload_columns(csv_import_reader $cir, $stdfields, $profilefields, moodle_url $returnurl) {
+function tool_uploadusercli_uu_validate_user_upload_columns(csv_import_reader $cir, $stdfields, $profilefields, moodle_url $returnurl) {
     $columns = $cir->get_columns();
 
     if (empty($columns)) {
@@ -244,7 +244,7 @@ function uu_validate_user_upload_columns(csv_import_reader $cir, $stdfields, $pr
  * @param string $username
  * @return incremented username which does not exist yet
  */
-function uu_increment_username($username) {
+function tool_uploadusercli_uu_increment_username($username) {
     global $DB, $CFG;
 
     if (!preg_match_all('/(.*?)([0-9]+)$/', $username, $matches)) {
@@ -254,7 +254,7 @@ function uu_increment_username($username) {
     }
 
     if ($DB->record_exists('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
-        return uu_increment_username($username);
+        return tool_uploadusercli_uu_increment_username($username);
     } else {
         return $username;
     }
@@ -266,7 +266,7 @@ function uu_increment_username($username) {
  * @param object user object- we need username, firstname and lastname
  * @return string field value
  */
-function uu_process_template($template, $user) {
+function tool_uploadusercli_uu_process_template($template, $user) {
     if (is_array($template)) {
         // hack for for support of text editors with format
         $t = $template['text'];
@@ -300,7 +300,7 @@ function uu_process_template($template, $user) {
 /**
  * Internal callback function.
  */
-function uu_process_template_callback($username, $firstname, $lastname, $block) {
+function tool_uploadusercli_uu_process_template_callback($username, $firstname, $lastname, $block) {
     switch ($block[3]) {
         case 'u':
             $repl = $username;
@@ -342,7 +342,7 @@ function uu_process_template_callback($username, $firstname, $lastname, $block) 
  *
  * @return array type=>name
  */
-function uu_supported_auths() {
+function tool_uploadusercli_uu_supported_auths() {
     // Get all the enabled plugins.
     $plugins = get_enabled_auth_plugins();
     $choices = array();
@@ -362,7 +362,7 @@ function uu_supported_auths() {
  * Returns list of roles that are assignable in courses
  * @return array
  */
-function uu_allowed_roles() {
+function tool_uploadusercli_uu_allowed_roles() {
     // let's cheat a bit, frontpage is guaranteed to exist and has the same list of roles ;-)
     $roles = get_assignable_roles(context_course::instance(SITEID), ROLENAME_ORIGINALANDSHORT);
     return array_reverse($roles, true);
@@ -372,7 +372,7 @@ function uu_allowed_roles() {
  * Returns mapping of all roles using short role name as index.
  * @return array
  */
-function uu_allowed_roles_cache() {
+function tool_uploadusercli_uu_allowed_roles_cache() {
     $allowedroles = get_assignable_roles(context_course::instance(SITEID), ROLENAME_SHORT);
     $rolecache = [];
     foreach ($allowedroles as $rid=>$rname) {
@@ -392,7 +392,7 @@ function uu_allowed_roles_cache() {
  * Returns mapping of all system roles using short role name as index.
  * @return array
  */
-function uu_allowed_sysroles_cache() {
+function tool_uploadusercli_uu_allowed_sysroles_cache() {
     $allowedroles = get_assignable_roles(context_system::instance(), ROLENAME_SHORT);
     $rolecache = [];
     foreach ($allowedroles as $rid => $rname) {
@@ -414,7 +414,7 @@ function uu_allowed_sysroles_cache() {
  * @param stdClass $data user profile data
  * @return stdClass pre-processed custom profile data
  */
-function uu_pre_process_custom_profile_data($data) {
+function tool_uploadusercli_uu_pre_process_custom_profile_data($data) {
     global $CFG, $DB;
     // find custom profile fields and check if data needs to converted.
     foreach ($data as $key => $value) {
@@ -442,7 +442,7 @@ function uu_pre_process_custom_profile_data($data) {
  * @param array $data user profile data
  * @return bool true if no error else false
  */
-function uu_check_custom_profile_data(&$data) {
+function tool_uploadusercli_uu_check_custom_profile_data(&$data) {
     global $CFG, $DB;
     $noerror = true;
     $testuserid = null;

@@ -31,7 +31,7 @@ namespace tool_uploadusercli\local;
  * @copyright   2020 Marina Glancy
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class text_progress_tracker extends \uu_progress_tracker {
+class text_progress_tracker extends \tool_uploadusercli_uu_progress_tracker {
 
     /**
      * Print table header.

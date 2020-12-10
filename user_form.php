@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/user/editlib.php');
  * @copyright  2007 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class admin_uploaduser_form1 extends moodleform {
+class tool_uploadusercli_admin_uploaduser_form1 extends moodleform {
     function definition () {
         $mform = $this->_form;
 
@@ -89,7 +89,7 @@ class admin_uploaduser_form1 extends moodleform {
  * @copyright  2007 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class admin_uploaduser_form2 extends moodleform {
+class tool_uploadusercli_admin_uploaduser_form2 extends moodleform {
     function definition () {
         global $CFG, $USER;
 
@@ -184,7 +184,7 @@ class admin_uploaduser_form2 extends moodleform {
         if ($showroles) {
             $mform->addElement('header', 'rolesheader', get_string('roles'));
 
-            $choices = uu_allowed_roles(true);
+            $choices = tool_uploadusercli_uu_allowed_roles(true);
 
             $mform->addElement('select', 'uulegacy1', get_string('uulegacy1role', 'tool_uploadusercli'), $choices);
             if ($studentroles = get_archetype_roles('student')) {
@@ -237,7 +237,7 @@ class admin_uploaduser_form2 extends moodleform {
         $mform->setForceLtr('email');
 
         // only enabled and known to work plugins
-        $choices = uu_supported_auths();
+        $choices = tool_uploadusercli_uu_supported_auths();
         $mform->addElement('select', 'auth', get_string('chooseauthmethod','auth'), $choices);
         $mform->setDefault('auth', 'manual'); // manual is a sensible backwards compatible default
         $mform->addHelpButton('auth', 'chooseauthmethod', 'auth');

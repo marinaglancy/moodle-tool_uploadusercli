@@ -48,7 +48,7 @@ class process {
     protected $cir;
     /** @var \stdClass  */
     protected $formdata;
-    /** @var \uu_progress_tracker  */
+    /** @var \tool_uploadusercli_uu_progress_tracker  */
     protected $upt;
     /** @var array  */
     protected $filecolumns = null;
@@ -62,7 +62,7 @@ class process {
     protected $profilefields = [];
     /** @var array */
     protected $allprofilefields = [];
-    /** @var string|\uu_progress_tracker|null  */
+    /** @var string|\tool_uploadusercli_uu_progress_tracker|null  */
     protected $progresstrackerclass = null;
 
     /** @var int */
@@ -109,12 +109,12 @@ class process {
     public function __construct(\csv_import_reader $cir, string $progresstrackerclass = null) {
         $this->cir = $cir;
         if ($progresstrackerclass) {
-            if (!class_exists($progresstrackerclass) || !is_subclass_of($progresstrackerclass, \uu_progress_tracker::class)) {
-                throw new \coding_exception('Progress tracker class must extend \uu_progress_tracker');
+            if (!class_exists($progresstrackerclass) || !is_subclass_of($progresstrackerclass, \tool_uploadusercli_uu_progress_tracker::class)) {
+                throw new \coding_exception('Progress tracker class must extend \tool_uploadusercli_uu_progress_tracker');
             }
             $this->progresstrackerclass = $progresstrackerclass;
         } else {
-            $this->progresstrackerclass = \uu_progress_tracker::class;
+            $this->progresstrackerclass = \tool_uploadusercli_uu_progress_tracker::class;
         }
 
         // Keep timestamp consistent.
@@ -122,9 +122,9 @@ class process {
         $today = make_timestamp(date('Y', $today), date('m', $today), date('d', $today), 0, 0, 0);
         $this->today = $today;
 
-        $this->rolecache      = uu_allowed_roles_cache(); // Course roles lookup cache.
-        $this->sysrolecache   = uu_allowed_sysroles_cache(); // System roles lookup cache.
-        $this->supportedauths = uu_supported_auths(); // Officially supported plugins that are enabled.
+        $this->rolecache      = tool_uploadusercli_uu_allowed_roles_cache(); // Course roles lookup cache.
+        $this->sysrolecache   = tool_uploadusercli_uu_allowed_sysroles_cache(); // System roles lookup cache.
+        $this->supportedauths = tool_uploadusercli_uu_supported_auths(); // Officially supported plugins that are enabled.
 
         if (enrol_is_enabled('manual')) {
             // We use only manual enrol plugin here, if it is disabled no enrol is done.
@@ -186,7 +186,7 @@ class process {
     public function get_file_columns(): array {
         if ($this->filecolumns === null) {
             $returnurl = new \moodle_url('/admin/tool/uploadusercli/index.php');
-            $this->filecolumns = uu_validate_user_upload_columns($this->cir,
+            $this->filecolumns = tool_uploadusercli_uu_validate_user_upload_columns($this->cir,
                 $this->standardfields, $this->profilefields, $returnurl);
         }
         return $this->filecolumns;
@@ -398,7 +398,7 @@ class process {
             }
             // We require username too - we might use template for it though.
             if (empty($user->username) and !empty($this->formdata->username)) {
-                $user->username = uu_process_template($this->formdata->username, $user);
+                $user->username = tool_uploadusercli_uu_process_template($this->formdata->username, $user);
                 $this->upt->track('username', s($user->username));
             }
         }
@@ -458,7 +458,7 @@ class process {
 
             // Find out if username incrementing required.
             if ($existinguser and $this->get_operation_type() == UU_USER_ADDINC) {
-                $user->username = uu_increment_username($user->username);
+                $user->username = tool_uploadusercli_uu_increment_username($user->username);
                 $existinguser = false;
             }
 
@@ -522,7 +522,7 @@ class process {
                 // All validation moved to form2.
                 if (isset($this->formdata->$field)) {
                     // Process templates.
-                    $user->$field = uu_process_template($this->formdata->$field, $user);
+                    $user->$field = tool_uploadusercli_uu_process_template($this->formdata->$field, $user);
                     $formdefaults[$field] = true;
                     if (in_array($field, $this->upt->columns)) {
                         $this->upt->track($field, s($user->$field), 'normal');
@@ -536,7 +536,7 @@ class process {
                 }
                 if (isset($this->formdata->$field)) {
                     // Process templates.
-                    $user->$field = uu_process_template($this->formdata->$field, $user);
+                    $user->$field = tool_uploadusercli_uu_process_template($this->formdata->$field, $user);
 
                     // Form contains key and later code expects value.
                     // Convert key to value for required profile fields.
@@ -852,7 +852,7 @@ class process {
 
                 if (!$remoteuser) {
                     // Pre-process custom profile menu fields data from csv file.
-                    $existinguser = uu_pre_process_custom_profile_data($existinguser);
+                    $existinguser = tool_uploadusercli_uu_pre_process_custom_profile_data($existinguser);
                     // Save custom profile fields data from csv file.
                     profile_save_data($existinguser);
                 }
@@ -985,7 +985,7 @@ class process {
                 new \moodle_url('/user/profile.php', ['id' => $user->id]), s($user->username)), 'normal', false);
 
             // Pre-process custom profile menu fields data from csv file.
-            $user = uu_pre_process_custom_profile_data($user);
+            $user = tool_uploadusercli_uu_pre_process_custom_profile_data($user);
             // Save custom profile fields data.
             profile_save_data($user);
 

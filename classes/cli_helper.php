@@ -108,10 +108,10 @@ class cli_helper {
                 }
             ],
         ];
-        $form = new \admin_uploaduser_form1();
+        $form = new \tool_uploadusercli_admin_uploaduser_form1();
         [$elements, $defaults] = $form->get_form_for_cli();
         $options += $this->prepare_form_elements_for_cli($elements, $defaults);
-        $form = new \admin_uploaduser_form2(null, ['columns' => ['type1'], 'data' => []]);
+        $form = new \tool_uploadusercli_admin_uploaduser_form2(null, ['columns' => ['type1'], 'data' => []]);
         [$elements, $defaults] = $form->get_form_for_cli();
         $options += $this->prepare_form_elements_for_cli($elements, $defaults);
         return $options;
@@ -299,17 +299,17 @@ class cli_helper {
      *
      * @param array $customdata
      * @param array $submitteddata
-     * @return \admin_uploaduser_form2
+     * @return \tool_uploadusercli_admin_uploaduser_form2
      */
-    protected function mock_form(array $customdata, array $submitteddata): \admin_uploaduser_form2 {
+    protected function mock_form(array $customdata, array $submitteddata): \tool_uploadusercli_admin_uploaduser_form2 {
         global $USER;
         $submitteddata['description'] = ['text' => $submitteddata['description'], 'format' => FORMAT_HTML];
 
         // Now mock the form submission.
-        $submitteddata['_qf__admin_uploaduser_form2'] = 1;
+        $submitteddata['_qf__tool_uploadusercli_admin_uploaduser_form2'] = 1;
         $oldignoresesskey = $USER->ignoresesskey ?? null;
         $USER->ignoresesskey = true;
-        $form = new \admin_uploaduser_form2(null, $customdata, 'post', '', [], true, $submitteddata);
+        $form = new \tool_uploadusercli_admin_uploaduser_form2(null, $customdata, 'post', '', [], true, $submitteddata);
         $USER->ignoresesskey = $oldignoresesskey;
 
         $form->set_data($submitteddata);

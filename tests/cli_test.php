@@ -31,7 +31,7 @@ use \tool_uploadusercli\cli_helper;
  * @copyright  2020 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tool_uploaduser_cli_testcase extends advanced_testcase {
+class tool_uploadusercli_cli_testcase extends advanced_testcase {
 
     /**
      * Generate cli_helper and mock $_SERVER['argv']

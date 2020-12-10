@@ -135,7 +135,7 @@ class preview extends \html_table {
             }
 
             // Check if rowcols have custom profile field with correct data and update error state.
-            $this->noerror = uu_check_custom_profile_data($rowcols) && $this->noerror;
+            $this->noerror = tool_uploadusercli_uu_check_custom_profile_data($rowcols) && $this->noerror;
             $rowcols['status'] = implode('<br />', $rowcols['status']);
             $data[] = $rowcols;
         }
