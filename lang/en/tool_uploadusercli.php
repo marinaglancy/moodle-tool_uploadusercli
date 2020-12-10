@@ -33,6 +33,7 @@ $string['clifile'] = 'Path to CSV file with the user data. Required.';
 $string['clifilenotreadable'] = 'File {$a} does not exist or is not readable';
 $string['clihelp'] = 'Print out this help.';
 $string['climissingargument'] = 'Argument --{$a} is required';
+$string['clioutputcompact'] = 'Output results in a compact format';
 $string['clititle'] = 'Command line Upload user tool.';
 $string['clivalidationerror'] = 'Validation error:';
 $string['csvdelimiter'] = 'CSV delimiter';

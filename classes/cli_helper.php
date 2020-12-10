@@ -26,6 +26,7 @@ namespace tool_uploadusercli;
 
 defined('MOODLE_INTERNAL') || die();
 
+use tool_uploadusercli\local\cli_compact_progress_tracker;
 use tool_uploadusercli\local\cli_progress_tracker;
 
 require_once($CFG->dirroot.'/user/profile/lib.php');
@@ -106,6 +107,11 @@ class cli_helper {
                         $this->cli_error(get_string('clifilenotreadable', 'tool_uploadusercli', $file));
                     }
                 }
+            ],
+            'compact' => [
+                'hasvalue' => false,
+                'description' => get_string('clioutputcompact', 'tool_uploadusercli'),
+                'default' => false
             ],
         ];
         $form = new \tool_uploadusercli_admin_uploaduser_form1();
@@ -279,7 +285,8 @@ class cli_helper {
         }
 
         // Start upload user process.
-        $this->process = new \tool_uploadusercli\process($cir, $this->progresstrackerclass);
+        $progresstrackerclass = $this->get_cli_option('compact') ? cli_compact_progress_tracker::class : $this->progresstrackerclass;
+        $this->process = new \tool_uploadusercli\process($cir, $progresstrackerclass);
         $filecolumns = $this->process->get_file_columns();
 
         $form = $this->mock_form(['columns' => $filecolumns, 'data' => ['iid' => $iid, 'previewrows' => 1]], $this->clioptions);

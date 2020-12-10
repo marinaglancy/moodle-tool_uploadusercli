@@ -48,6 +48,9 @@ if ($clihelper->get_cli_option('help')) {
 
 $clihelper->process();
 
-foreach ($clihelper->get_stats() as $line) {
-    cli_writeln($line);
+if (!$clihelper->get_cli_option('compact')) {
+    cli_separator();
+    foreach ($clihelper->get_stats() as $line) {
+        cli_writeln($line);
+    }
 }

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class text_progress_tracker
+ * Class cli_compact_progress_tracker
  *
  * @package     tool_uploadusercli
  * @copyright   2020 Marina Glancy
@@ -25,28 +25,29 @@
 namespace tool_uploadusercli\local;
 
 /**
- * Tracks the progress of the user upload and echos it in a text format
+ * Tracks the progress of the user upload and outputs it in CLI script in compact format (writes to STDOUT)
  *
  * @package     tool_uploadusercli
  * @copyright   2020 Marina Glancy
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class text_progress_tracker extends \tool_uploadusercli_uu_progress_tracker {
-
-    /**
-     * Print table header.
-     * @return void
-     */
-    public function start() {
-        $this->_row = null;
-    }
+class cli_compact_progress_tracker extends text_progress_tracker {
 
     /**
      * Output one line (followed by newline)
      * @param string $line
      */
     protected function output_line(string $line): void {
-        echo $line . PHP_EOL;
+        cli_writeln($line);
+    }
+
+    /**
+     * Print table header.
+     * @return void
+     */
+    public function start() {
+        parent::start();
+        $this->output_line('CSV Line | username | status');
     }
 
     /**
@@ -62,7 +63,10 @@ class text_progress_tracker extends \tool_uploadusercli_uu_progress_tracker {
             }
             return;
         }
-        $this->output_line(get_string('linex', 'tool_uploadusercli', $this->_row['line']['normal']));
+
+        $lineno = get_string('linex', 'tool_uploadusercli', $this->_row['line']['normal']);
+        $username = strip_tags($this->_row['username']['normal']);
+        $statuses = [];
         $prefix = [
             'normal' => '',
             'info' => '',
@@ -71,53 +75,22 @@ class text_progress_tracker extends \tool_uploadusercli_uu_progress_tracker {
         ];
         foreach ($this->_row['status'] as $type => $content) {
             if (strlen($content)) {
-                $this->output_line('  '.$prefix[$type].$content);
+                $statuses[] = $prefix[$type].$content;
             }
         }
 
         foreach ($this->_row as $key => $field) {
             foreach ($field as $type => $content) {
                 if ($key !== 'status' && $type !== 'normal' && strlen($content)) {
-                    $this->output_line('  ' . $prefix[$type] . $this->headers[$key] . ': ' .
-                        str_replace("\n", "\n".str_repeat(" ", strlen($prefix[$type] . $this->headers[$key]) + 4), $content));
+                    $statuses[] = $prefix[$type] . $this->headers[$key] . ': ' .
+                        str_replace("\n", "\n".str_repeat(" ", strlen($prefix[$type] . $this->headers[$key]) + 4), $content);
                 }
             }
         }
         foreach ($this->columns as $col) {
             $this->_row[$col] = ['normal' => '', 'info' => '', 'warning' => '', 'error' => ''];
         }
-    }
 
-    /**
-     * Add tracking info
-     * @param string $col name of column
-     * @param string $msg message
-     * @param string $level 'normal', 'warning' or 'error'
-     * @param bool $merge true means add as new line, false means override all previous text of the same type
-     * @return void
-     */
-    public function track($col, $msg, $level = 'normal', $merge = true) {
-        if (empty($this->_row)) {
-            $this->flush();
-        }
-        if (!in_array($col, $this->columns)) {
-            return;
-        }
-        if ($merge) {
-            if ($this->_row[$col][$level] != '') {
-                $this->_row[$col][$level] .= "\n";
-            }
-            $this->_row[$col][$level] .= $msg;
-        } else {
-            $this->_row[$col][$level] = $msg;
-        }
-    }
-
-    /**
-     * Print the table end
-     * @return void
-     */
-    public function close() {
-        $this->flush();
+        $this->output_line($lineno . ' | ' . $username . ' | ' . join('; ', $statuses));
     }
 }

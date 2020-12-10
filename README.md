@@ -16,6 +16,7 @@ Command line Upload user tool.
 Options:
 -h, --help                    Print out this help.
 --file=PATH                   Path to CSV file with the user data. Required.
+--compact                     Output results in a compact format
 --delimiter_name=VALUE        CSV delimiter:
                                 comma - ,
                                 semicolon - ;
